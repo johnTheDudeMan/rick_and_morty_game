@@ -1,0 +1,157 @@
+html {
+	background-image: url("../assets/daHood.png");
+	background-repeat: no-repeat;
+}
+
+.container {
+	width: 863px;
+	height: 778px;
+}
+
+.meter {
+	position: fixed;
+	background-color: beige;
+	width: 205px;
+	height: 25px;
+}
+
+.meter p {
+	float: left;
+	margin: 5px;
+	color: firebrick;
+}
+
+.meter meter {
+	width: 100px;
+	float: right;
+	margin: 5px;
+}
+
+#soberMeter {
+	top: 1px;
+	left: 500px;
+}
+
+#portalGunMeterDiv {
+	top: 1px;
+	left: 250px;
+}
+
+#lifeMeterDiv {
+	top: 1px;
+	left: 4px;
+}
+
+#rick{
+	width: 50px;
+	height: 50px;
+	position: absolute;
+	left: 140px;
+	top: 250px;
+	display: inline;
+}
+
+#rick img {
+	width: 50px;
+	height: 50px;
+}
+
+#rickSays {
+	position: absolute;
+	top: -40px;
+	height: 20px;
+	width: 170px;
+	text-align: center;
+	background-color: #fff;
+	border: 1px solid #666;
+	-webkit-border-radius: 15px;
+	-moz-border-radius: 15px;
+	border-radius: 15px;
+	-webkit-box-shadow: 2px 2px 4px #888;
+	-moz-box-shadow: 2px 2px 4px #888;
+	box-shadow: 2px 2px 4px #888;
+}
+
+#morty{
+	width: 45px;
+	height: 45px;
+	position: absolute;
+	display: inline;
+}
+
+#morty img {
+	width: 45px;
+	height: 45px;
+}
+
+.item {
+	width: 30px;
+	height: 30px;
+	position: absolute;
+}
+
+.fix {
+	height: 30px;
+	width: 30px;
+}
+
+.character {
+	width: 50px;
+	height: 50px;
+}
+
+#brodGran {
+	left: 130px;
+	top: 85px;
+}
+
+#brodGlen {
+	left: 130px;
+	top: 400px;
+}
+
+#wintGran {
+	left: 350px;
+	top: 100px;
+}
+
+#wintGlen {
+	left: 340px;
+	top: 390px;
+}
+
+#sherGran {
+	left: 690px;
+	top: 70px;
+}
+
+#sherGlen {
+	left: 640px;
+	top: 420px;
+}
+
+#sherThor {
+	left: 750px;
+	top: 700px;
+}
+
+#wintThor {
+	left: 360px;
+	top: 680px;
+}
+
+#brodThor {
+	left: 100px;
+	top: 700px;
+}
+
+.ui-dialog .ui-dialog-content {
+	font-size: 14px;
+}
+
+.ui-button-text {
+    font-size: 11px;
+    padding: 1px 1px 1px 1px; 
+}
+
+

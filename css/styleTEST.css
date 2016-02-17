@@ -1,0 +1,54 @@
+html {
+	background-image: url("../assets/daHood.png");
+	background-repeat: no-repeat;
+}
+
+.container {
+	width: 863pz;
+	height: 778px;
+}
+
+.soberMeter {
+	position: fixed;
+	background-color: beige;
+	top: 20px;
+	right: 20px;
+	width: 205px;
+	height: 25px;
+}
+
+.soberMeter p {
+	float: left;
+	margin: 5px;
+	color: firebrick;
+}
+
+.soberMeter meter {
+	width: 100px;
+	float: right;
+	margin: 5px;
+}
+
+#rick{
+	width: 50px;
+	height: 50px;
+	position: absolute;
+	left: 140px;
+	top: 250px;
+	display: inline;
+}
+#rick img {
+	width: 50px;
+	height: 50px;
+}
+
+
+#flask {
+	background-image: url("/GameBook/assets/flask.png");
+	background-position: center;
+	background-size: contain;
+	width: 30px;
+	height: 30px;
+	background-repeat: no-repeat;
+	margin: 100px;
+}
