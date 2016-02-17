@@ -1,19 +1,17 @@
-/*
-function newGame() {
-	var userName = prompt("What name do you want to go by in this game?");
-	if (userName == "") {
-		alert("Don't be a dick, just enter any name or text.");
-		userName;
-	} else {
-		alert("Hi " +userName +", this game will be nice and easy. The objective of this game is to: \n\n1) Help Rick fix his portal gun. \n2) Make sure Rick keeps a buzz and does not sober up. \n3) Find Morty before using the portal gun to go back to Earth C-137.");
-	}
-	
-}
-
-newGame();
+/* 	PLEASE NOTE: 
+		- This game is my first project I started to help me learn programing.
+		- Some objects, such as alcholol and illegal drugs are used because:
+			A) They are rutinely featured in the show Rick and Morty on Cartoon Network which this game is based on. 
+			B) I needed a variety of objects to use for the game.
+			C) I do not condone the use of illegal drugs, but a few drinks of alcohol in moderation is okay I guess. 
+		- Images used in this game are not mine. I just pulled whatever off google searches, so I can spend time actually programing. 
 */
 
-
+//todo: find why elements are hiding when rick is not close by. 
+//   Answer) getBoundingClienRect was not working correctly. I used offset instead and it works better with scrolling 
+// maybe mushrooms will make map rotate each move to enhance fuckedupness
+//todo::: confirm taking drugs as they will have special affects
+//Jerry: will help find a portal gun part and will give it to rick next time he sees him.
 // birdPerson should fly or give close cordinates where Morty is
 // squanchy will increase intox to 10
 
@@ -49,7 +47,7 @@ var dialogWindow = function (someText, title, imgOptional, buttonsOptional) {
 	var dialogDiv = document.createElement('div');
 	var dialogP = document.createElement('p');
 	var dialogImg = document.createElement('img');
-	dialogImg.src = "../gamebook/assets/" + imgOptional;
+	dialogImg.src = "../rick_and_morty_game/assets/" + imgOptional;
 	$(dialogP).html(someText);
 	dialogDiv.appendChild(dialogP);
 	dialogDiv.appendChild(dialogImg);
@@ -61,7 +59,7 @@ var dialogWindow = function (someText, title, imgOptional, buttonsOptional) {
 	});
 };
 
-dialogWindow("test", "test");
+dialogWindow("Object of the game is to find Morty. He will appear randomly on the map, but disappear rather quickly.", "Game Objective", "morty.png")
 
 
 function locationDiv(name, elem) {
@@ -87,35 +85,35 @@ var randomItem = function (div) {
 	var rand = Math.random() * 8.8;
 	if(rand <= 1) {
 		var beerBottle = document.createElement("img");
-		beerBottle.src = "../gamebook/assets/beerBottle.png";
+		beerBottle.src = "../rick_and_morty_game/assets/beerBottle.png";
 		beerBottle.className = "fix";
 		div.elem.appendChild(beerBottle);
 		div.intoxIncrease = 1.5;
 		div.lastFix = "booze";
 	} else if (rand > 1 && rand <=2) {
 		var beerMug = document.createElement("img");
-		beerMug.src = "../gamebook/assets/beerMug.png";
+		beerMug.src = "../rick_and_morty_game/assets/beerMug.png";
 		beerMug.className = "fix";
 		div.elem.appendChild(beerMug);
 		div.intoxIncrease = 1.7;
 		div.lastFix = "booze";
 	} else if (rand > 2 && rand <= 3) {
 		var martini = document.createElement('img');
-		martini.src = '../gamebook/assets/martini.png';
+		martini.src = '../rick_and_morty_game/assets/martini.png';
 		martini.className = "fix";
 		div.elem.appendChild(martini);
 		div.intoxIncrease = 2.5;
 		div.lastFix = "booze";
 	} else if (rand > 3 && rand <= 4) {
 		var whiskey = document.createElement('img');
-		whiskey.src = '../gamebook/assets/whiskey.png';
+		whiskey.src = '../rick_and_morty_game/assets/whiskey.png';
 		whiskey.className = "fix";
 		div.elem.appendChild(whiskey);
 		div.intoxIncrease = 3;
 		div.lastFix = "booze";
 	} else if (rand > 4 && rand <=5) {
 		var bong = document.createElement('img');
-		bong.src = '../gamebook/assets/bong.png';
+		bong.src = '../rick_and_morty_game/assets/bong.png';
 		bong.className = "fix";
 		div.elem.appendChild(bong);
 		div.intoxIncrease = 1.8;
@@ -123,28 +121,28 @@ var randomItem = function (div) {
 	} else if (rand > 5 && rand <= 5.4) {
 // make flask a less common item due to it being valuable for intox increase, bong too	
 		var flask = document.createElement('img');
-		flask.src = '../gamebook/assets/flask.png';
+		flask.src = '../rick_and_morty_game/assets/flask.png';
 		flask.className = "fix";
 		div.elem.appendChild(flask);
 		div.intoxIncrease = 3.5;
 		div.lastFix = "booze";
 	} else if (rand > 5.4 && rand <= 5.8) {
 		var cocaine = document.createElement('img');
-		cocaine.src = '../gamebook/assets/cocaine.png';
+		cocaine.src = '../rick_and_morty_game/assets/cocaine.png';
 		cocaine.className = "fix";
 		div.elem.appendChild(cocaine);
 		div.intoxIncrease = 3;
 		div.lastFix = "drugs";
 	} else if (rand > 5.8 && rand <= 6) {
 		var shroom = document.createElement('img');
-		shroom.src = '../gamebook/assets/shroom.png';
+		shroom.src = '../rick_and_morty_game/assets/shroom.png';
 		shroom.className = "fix";
 		div.elem.appendChild(shroom);
 		div.intoxIncrease = 5;
 		div.lastFix = "drugs";
 	} else if (rand > 6 && rand <= 6.4) {
 		var portalGun = document.createElement('img');
-		portalGun.src = '../gamebook/assets/portalGun.png';
+		portalGun.src = '../rick_and_morty_game/assets/portalGun.png';
 		portalGun.className = "fix";
 		div.elem.appendChild(portalGun);
 		div.lastFix = "portalGun";
@@ -152,14 +150,14 @@ var randomItem = function (div) {
 		div.portalGunPartsFound = 1;
 	} else if (rand > 6.4 && rand <= 7.3) {
 		var jerry = document.createElement('img');
-		jerry.src = '../gamebook/assets/jerry.png';
+		jerry.src = '../rick_and_morty_game/assets/jerry.png';
 		jerry.className = "character";
 		div.elem.appendChild(jerry);
 		div.intoxIncrease = 0;
 		div.lastFix = "jerry";
 	} else if (rand > 7.3 && rand <= 8.1) {
 		var birdPerson = document.createElement('img');
-		birdPerson.src = '../gamebook/assets/birdPerson.png';
+		birdPerson.src = '../rick_and_morty_game/assets/birdPerson.png';
 		birdPerson.className = "character";
 		div.elem.appendChild(birdPerson);
 		div.intoxIncrease = 0;
@@ -167,7 +165,7 @@ var randomItem = function (div) {
 	} else if (rand > 8.1 && rand < 8.8) {
 		if (squanchyVisits < 3) {
 			var squanchy = document.createElement('img');
-			squanchy.src = '../gamebook/assets/squanchy.png';
+			squanchy.src = '../rick_and_morty_game/assets/squanchy.png';
 			squanchy.className = "character";
 			div.elem.appendChild(squanchy);
 			div.intoxIncrease = 5;
@@ -500,7 +498,7 @@ var mortyAppearance = function () {
 	var morty = document.createElement('div');
 	morty.id = "morty";
 	var mortyImg = document.createElement('img');
-	mortyImg.src = '../gamebook/assets/morty.png';
+	mortyImg.src = '../rick_and_morty_game/assets/morty.png';
 	morty.appendChild(mortyImg);
 	mortyRandomLocation();
 	morty.style.left = mortyOffsetLeft + 'px';
@@ -529,7 +527,7 @@ var teleport = function () {
 	var dialogP = document.createElement('p');
 	dialogP.style.cssFloat = 'left';
 	var dialogImg = document.createElement('img');
-	dialogImg.src = "../gamebook/assets/teleportSet.png";
+	dialogImg.src = "../rick_and_morty_game/assets/teleportSet.png";
 	$(dialogP).html("Teleport to: ");
 	dialogDiv.appendChild(dialogP);
 	dialogDiv.appendChild(dialogImg);
@@ -628,11 +626,3 @@ $(document).ready(function () {
 		}
 	});
 });
-
-//todo::: confirm taking drugs as they will have special affects
-
-
-//todo: find why elements are hiding when rick is not close by. Answer) getBoundingClienRect was not working correctly. I used offset instead and it works better with scrolling 
-// maybe mushrooms will make map rotate each move to enhance fuckedupness
-
-//Jerry: will help find a portal gun part and will give it to rick next time he sees him.
