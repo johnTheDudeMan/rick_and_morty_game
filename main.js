@@ -1,24 +1,25 @@
 /* 	PLEASE NOTE: 
-		- This game is my first project I started to help me learn programing.
-		- Some objects, such as alcholol and illegal drugs are used because:
-			A) They are rutinely featured in the show Rick and Morty on Cartoon Network which this game is based on. 
-			B) I needed a variety of objects to use for the game.
-			C) I do not condone the use of illegal drugs, but a few drinks of alcohol in moderation is okay I guess. 
-		- Images used in this game are not mine. I just pulled whatever off google searches, so I can spend time actually programing. 
+		- This game is my first project I started to help me learn programing. Any feedback will be greatly appreciated. 
+		- Images used in this game are not mine. I just pulled whatever off google searches. 
+		- This game is based on The Rick and Morty show on Cartoon Network. Dialogs and character actions reflects the show. 
+		- I tried to avoid violence and the use of weapon objects in the game, but found my alternatives were not much better; I do not condone binge drinking or use of illegal drugs (but in this game its fine).		
 */
 
-//todo: find why elements are hiding when rick is not close by. 
-//   Answer) getBoundingClienRect was not working correctly. I used offset instead and it works better with scrolling 
-// maybe mushrooms will make map rotate each move to enhance fuckedupness
-//todo::: confirm taking drugs as they will have special affects
-//Jerry: will help find a portal gun part and will give it to rick next time he sees him.
-// birdPerson should fly or give close cordinates where Morty is
-// squanchy will increase intox to 10
+/*	TO DO:
+		- Create a way to win the game.
+		- Fix winning dialog window size
+		- Winning dialog sometimes multiplies or it cannot be closed
+		- Characters like Squanchy need to disappear from map if visited twice
+		- Eliminate duplicate characters from rendering.
+		- If Rick gets the last portal gun part from Jerry, dialog how to use portal gun needs to appear.
+		- Contain Morty within the map of play
+		- Come up with a better idea for Birdperson's intel, as the setup so far is a little buggy
+*/
 
 var rick = document.getElementById('rick');
 var rickSaysElem = document.getElementById("rickSays");
 var intox = document.getElementById('intox');
-var intoxication = 5;
+var intoxication = 6;
 var portGunMeter = document.getElementById('portalGunMeter');
 var portalGunParts = 0;
 var lifeMeter = document.getElementById('lifeMeter');
@@ -32,6 +33,10 @@ var birdPersonIntelWaterfront = false;
 var squanchyVisits = 0;
 var jerryVisits = 0;
 var birdPersonVisits = 0;
+var rickMoves = -25;
+var mortyOffsetLeft = 0;
+var mortyOffsetTop = 0;
+var mortyVisible = false;
 
 var dialogWindow = function (someText, title, imgOptional, buttonsOptional) {
 	if (imgOptional === undefined) {
@@ -61,7 +66,6 @@ var dialogWindow = function (someText, title, imgOptional, buttonsOptional) {
 
 dialogWindow("Object of the game is to find Morty. He will appear randomly on the map, but disappear rather quickly.", "Game Objective", "morty.png")
 
-
 function locationDiv(name, elem) {
 	this.name = name;
 	this.elem = elem;
@@ -77,9 +81,6 @@ var sherGlen = new locationDiv("sherGlen", document.getElementById('sherGlen'));
 var sherThor = new locationDiv("sherThor", document.getElementById('sherThor'));
 var wintThor = new locationDiv("wintThor", document.getElementById('wintThor'));
 var brodThor = new locationDiv("brodThor", document.getElementById('brodThor'));
-
-
-// create prototypes for booze and drugs and special effects Answer: not done, still thinking
 
 var randomItem = function (div) {
 	var rand = Math.random() * 8.8;
@@ -119,7 +120,6 @@ var randomItem = function (div) {
 		div.intoxIncrease = 1.8;
 		div.lastFix = "drugs";
 	} else if (rand > 5 && rand <= 5.4) {
-// make flask a less common item due to it being valuable for intox increase, bong too	
 		var flask = document.createElement('img');
 		flask.src = '../rick_and_morty_game/assets/flask.png';
 		flask.className = "fix";
@@ -127,10 +127,10 @@ var randomItem = function (div) {
 		div.intoxIncrease = 3.5;
 		div.lastFix = "booze";
 	} else if (rand > 5.4 && rand <= 5.8) {
-		var cocaine = document.createElement('img');
-		cocaine.src = '../rick_and_morty_game/assets/cocaine.png';
-		cocaine.className = "fix";
-		div.elem.appendChild(cocaine);
+		var pills = document.createElement('img');
+		pills.src = '../rick_and_morty_game/assets/pills.png';
+		pills.className = "fix";
+		div.elem.appendChild(pills);
 		div.intoxIncrease = 3;
 		div.lastFix = "drugs";
 	} else if (rand > 5.8 && rand <= 6) {
@@ -237,7 +237,7 @@ var jerryGame = function() {
 		var gameOver = false;
 		if (rickScore === 3 || jerryScore === 3) {
 			if (jerryScore === 3) {
-				dialogWindow("Rick is annoyred and lost some buzz", "Jerry Wins", "jerrySmug.png");
+				dialogWindow("Rick is annoyed and lost some buzz", "Jerry Wins", "jerrySmug.png");
 				intoxication -= 2;
 				$(intox).attr('value', intoxication);
 			} else if (rickScore === 3) {
@@ -250,7 +250,6 @@ var jerryGame = function() {
 		}
 	};
 
-	
 	var dialogGame = function () {
 		var gameOver = false;
 		var dialogMessage = document.createElement('div');
@@ -292,7 +291,7 @@ var jerry = new character(
 	function() {
 		intoxication -= 2; 
 		$(intox).attr('value', intoxication); 
-		$(rickSaysElem).text("Your a buzz kill, Jerry");
+		$(rickSaysElem).text("You're a buzz kill, Jerry");
 		$(rickSaysElem).show('slow', function() {
 			$(this).delay(1200).hide('slow');
 		});
@@ -312,7 +311,6 @@ var jerry = new character(
 	}
 );
 
-// ----------------------------- Birdperson ------------------
 var birdPerson = new character(
 	"Birdperson",
 	function() {life = 4; $(lifeMeter).attr('value', life);},
@@ -364,7 +362,15 @@ var mortyAtWaterfront = function () {
 	})
 };
 
-// ----------------------------- Squanchy ---------------------
+var mortyFound = function () {
+	$(document).keydown(function(event) {
+		var keycode = (event.keyCode ? event.keyCode : event.which);
+		if(keycode == '87' && mortyVisible) {
+			dialogWindow("<h3>You WIN!!!</h3>Rick found Morty portaled their way back to Earth C-137", "Game Over", "gameOverWinner.png")
+		}
+	})
+};
+
 var squanchy = new character(
 	"Squanchy", 
 	function() {intoxication = 10; $(intox).attr("value", intoxication);
@@ -399,8 +405,6 @@ var squanchy = new character(
 	}
 );
 
-
-// function first checks to see if Rick is in range and then what the last fix was before increasing intoxication in a specific way. 
 var inRangeOfRick = function(item) {
 	var rickTop = rick.offsetTop;
 	var rickLeft = rick.offsetLeft;
@@ -412,7 +416,6 @@ var inRangeOfRick = function(item) {
 			intoxication *= 1.75;
 		} else if(item.lastFix === "portalGun") {
 			portalGunParts += item.portalGunPartsFound;
-// --------------- CHARACTER Initializer -----------------------			
 		} else if(item.lastFix === "squanchy") {
 			if (squanchyVisits < 1) {
 				dialogWindow(squanchy.interact1, "Squanchy", "squanchy2.png", squanchy.button);
@@ -425,7 +428,6 @@ var inRangeOfRick = function(item) {
 			if (jerryVisits < 1) {
 				dialogWindow(jerry.interact1, "Jerry", "jerry.png", jerry.button);
 			} else {dialogWindow(jerry.interact2, "Jerry", "jerry.png", jerry.button);}
-// ------------------------------------------------------------			
 		} else {intoxication += item.intoxIncrease};
 		lastFix = item.lastFix;
 		item.rickInRange = true;
@@ -445,7 +447,7 @@ var inRangeOfRick = function(item) {
 				}
 			})
 		}
-	}
+	};
 	if(partsAtSmokeShop) {
 		if(rickTop > 69 && rickTop < 131 && rickLeft > 379 && rickLeft < 441) {
 			$(document).keydown(function(event) {
@@ -457,7 +459,7 @@ var inRangeOfRick = function(item) {
 				}
 			})
 		}
-	}
+	};
 	if (birdPersonIntelWholeFoods) {
 		if (rickTop > 400 && rickTop < 520 && rickLeft > 140 && rickLeft < 261) {
 			mortyAtWholeFoods();
@@ -467,13 +469,15 @@ var inRangeOfRick = function(item) {
 		if (rickTop > 0 && rickTop < 80 && rickLeft > 649 && rickLeft < 741) {
 			mortyAtWaterfront();
 		}
-	}
+	};
+	if (mortyVisible) {
+		if ((Math.abs(rickTop - mortyOffsetTop) < 35) && (Math.abs(rickLeft - mortyOffsetLeft) < 35)) {
+			mortyFound();
+		}
+	};
 };
 
-// starting Rick's moves to a negative number so that Morty will not appear in begining of game
-var rickMoves = -25;
-var mortyOffsetLeft = 0;
-var mortyOffsetTop = 0;
+
 
 var mortyRandomLocation = function () {
 	var rickLeft = rick.offsetLeft;
@@ -484,7 +488,7 @@ var mortyRandomLocation = function () {
 	var negOrPos = function() {
 		rand = Math.random();
 		if (rand < 0.50) {
-			rand = -1;
+			rand = - 1;
 		} else {rand = 1;}
 		return rand;
 	};
@@ -494,8 +498,8 @@ var mortyRandomLocation = function () {
 	mortyOffsetTop = (randoming() * 150 + 121) * negOrPos() + rickTop;	
 };
 
+var morty = document.createElement('div');
 var mortyAppearance = function () {
-	var morty = document.createElement('div');
 	morty.id = "morty";
 	var mortyImg = document.createElement('img');
 	mortyImg.src = '../rick_and_morty_game/assets/morty.png';
@@ -504,6 +508,7 @@ var mortyAppearance = function () {
 	morty.style.left = mortyOffsetLeft + 'px';
 	morty.style.top = mortyOffsetTop + 'px';
 	mapElement.appendChild(morty);
+	mortyVisible = true;
 };
 
 var rickMovesCounter = function () {
@@ -512,8 +517,9 @@ var rickMovesCounter = function () {
 		mortyAppearance();
 	};
 	if (rickMoves > 11) {
-		morty.remove();
+		morty.removeChild(morty.childNodes[0]);
 		rickMoves = 0;
+		mortyVisible = false;
 	};
 };
 
@@ -542,7 +548,7 @@ var teleport = function () {
 				$(this).dialog('close');
 				teleportTo(170, 400);
 			},
-			'Broadway & Thornday': function() {
+			'Broadway & Thorndale': function() {
 				$(this).dialog('close');
 				teleportTo(170, 670);
 			},
@@ -554,15 +560,13 @@ var teleport = function () {
 				$(this).dialog('close');
 				teleportTo(620, 370);
 			},
-			'Sheridan & Thorndal': function() {
+			'Sheridan & Thorndale': function() {
 				$(this).dialog('close');
 				teleportTo(680, 670);
 			}
 		}
 	});	
 };
-
-
 
 $(document).ready(function () {
 	$(document).keydown(function(key) {
@@ -574,7 +578,7 @@ $(document).ready(function () {
 		inRangeOfRick(sherGlen);
 		inRangeOfRick(sherThor);
 		inRangeOfRick(wintThor);
-		inRangeOfRick(brodThor);		
+		inRangeOfRick(brodThor);
 		
 		switch (parseInt(key.which, 10)) {
 			case 37:
@@ -602,7 +606,7 @@ $(document).ready(function () {
 				rickMovesCounter();
 				break;
 			case 84:
-				if (portalGunParts === 4) {teleport()};
+				if (portalGunParts >= 4) {teleport()};
 				break;
 		};
 		$(portGunMeter).attr('value', portalGunParts);
